@@ -2,25 +2,74 @@ OVDF v1.1
 PlayerMovementManager, Assembly-CSharp
 MetaGuid:609f065feafceb7429f54fbe46777daa
 
+# $SoZxsbfNHXRp1xXNcKzjxh
+Position: $root:3
++ [Sirenix.OdinInspector.TitleGroupAttribute]
+	GroupName = "wdwww"
+	Alignment = Centered
+
+# $DBdnxH4sTMQhxMEsqLXeC6
+Position: $root:22
++ [Sirenix.OdinInspector.TitleGroupAttribute]
+	GroupName = "Collision and Rb"
+
+# $H28kwsuPvoFqGhFLHMgcCq
+Position: $root
++ [Sirenix.OdinInspector.TitleGroupAttribute]
+	GroupName = "Camera"
+
 # moveSpeed
-Position: $root:7
-+ [Sirenix.OdinInspector.TitleAttribute]
-	Title = "Values"
-	Subtitle = "The visible values if changes are needed in the future"
+Position: $SoZxsbfNHXRp1xXNcKzjxh:1
 
 # playerCollider
-Position: $root:8
+Position: $DBdnxH4sTMQhxMEsqLXeC6:0
 
 # rb
-Position: $root:9
+Position: $DBdnxH4sTMQhxMEsqLXeC6:1
 
 # directionTest
-Position: $root:12
+Position: $SoZxsbfNHXRp1xXNcKzjxh:0
 
 # CinemachineCameraHolderEmpty
-Position: $root:10
-+ [Sirenix.OdinInspector.TitleAttribute]
-	Title = "Camera Stuff"
+Position: $H28kwsuPvoFqGhFLHMgcCq:0
 
 # elapsedTime
-Position: $root:11
+Position: $SoZxsbfNHXRp1xXNcKzjxh:14
+
+# sprintSpeed
+Position: $SoZxsbfNHXRp1xXNcKzjxh:3
+
+# sprintMultiplier
+Position: $SoZxsbfNHXRp1xXNcKzjxh:4
+
+# crouchDivisor
+Position: $SoZxsbfNHXRp1xXNcKzjxh:6
+
+# defaultMoveSpeed
+Position: $SoZxsbfNHXRp1xXNcKzjxh:2
++ [Sirenix.OdinInspector.GUIColorAttribute]
+	Color = #EF372FFF
+
+# crouchSpeed
+Position: $SoZxsbfNHXRp1xXNcKzjxh:5
+
+# jumpStrength
+Position: $SoZxsbfNHXRp1xXNcKzjxh:7
+
+# airTime
+Position: $SoZxsbfNHXRp1xXNcKzjxh:8
+
+# airTimeCount
+Position: $SoZxsbfNHXRp1xXNcKzjxh:10
+
+# groundCheckEmpty
+Position: $SoZxsbfNHXRp1xXNcKzjxh:13
+
+# isInAir
+Position: $SoZxsbfNHXRp1xXNcKzjxh:9
+
+# groundLayer
+Position: $SoZxsbfNHXRp1xXNcKzjxh:12
+
+# isOnGround
+Position: $SoZxsbfNHXRp1xXNcKzjxh:11
