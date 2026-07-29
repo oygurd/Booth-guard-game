@@ -1,0 +1,26 @@
+OVDF v1.1
+PlayerMovementManager, Assembly-CSharp
+MetaGuid:609f065feafceb7429f54fbe46777daa
+
+# moveSpeed
+Position: $root:7
++ [Sirenix.OdinInspector.TitleAttribute]
+	Title = "Values"
+	Subtitle = "The visible values if changes are needed in the future"
+
+# playerCollider
+Position: $root:8
+
+# rb
+Position: $root:9
+
+# directionTest
+Position: $root:12
+
+# CinemachineCameraHolderEmpty
+Position: $root:10
++ [Sirenix.OdinInspector.TitleAttribute]
+	Title = "Camera Stuff"
+
+# elapsedTime
+Position: $root:11
