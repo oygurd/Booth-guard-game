@@ -14,11 +14,11 @@ public class PlayerMovementManager : SerializedMonoBehaviour
     public float crouchSpeed,crouchDivisor;
     public float jumpStrength;
     public bool isOnGround;
-    public bool isInAir;
     [SerializeField] private float airTime;
     
     [SerializeField] Collider playerCollider;
 
+    // dont use PlayerControlsSO here for simplicity
     InputAction moveAction;
     InputAction SprintAction;
     InputAction CrouchAction;   
@@ -52,6 +52,7 @@ public class PlayerMovementManager : SerializedMonoBehaviour
         
         
     }
+    
 
     private void FixedUpdate()
     {
@@ -92,6 +93,7 @@ public class PlayerMovementManager : SerializedMonoBehaviour
        CinemachineCameraHolderEmpty.transform.position = new Vector3(transform.position.x, transform.position.y + 1.5f + Mathf.PingPong(time, length),transform.position.z);
     }
 
+    
 
     private void UpdateMoveSpeed()
     {
@@ -112,8 +114,7 @@ public class PlayerMovementManager : SerializedMonoBehaviour
     public void Jump()
     {
         isOnGround = Physics.Raycast(groundCheckEmpty.position,Vector3.down,0.6f, groundLayer );
-        isInAir = !isOnGround;
-        if (JumpAction.WasPressedThisFrame() && isOnGround && !isInAir)
+        if (JumpAction.WasPressedThisFrame() && isOnGround)
         {
            rb.AddForce(transform.up * jumpStrength, ForceMode.Impulse);
         }
