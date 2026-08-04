@@ -5,6 +5,8 @@ using System;
 [CreateAssetMenu(fileName = "PlayerControlsSO", menuName = "Settings Scriptable Objects/PlayerControlsSO")]
 public class PlayerControlsSO : ScriptableObject
 {
+    private bool isInitialized;
+    
     InputAction MoveAction;
     InputAction lookAction;
     InputAction JumpAction;
@@ -13,7 +15,7 @@ public class PlayerControlsSO : ScriptableObject
     InputAction LeftClickAction;
     InputAction RightClickAction;
     InputAction InteractAction;
-    
+    InputAction InventoryAction;
     public event Action<Vector2> onMove;
     public event Action<Vector2> onLook;
     public event Action Onjump;
@@ -22,16 +24,22 @@ public class PlayerControlsSO : ScriptableObject
     public event Action Onleftclick;
     public event Action Onrightclick;
     public event Action Oninteract;
-    
+    public event Action Oninventory;
     public void Initialize()
     {
+        InputSystem.actions.Enable();
+        
         MoveAction = InputSystem.actions.FindAction("Move");
+        lookAction = InputSystem.actions.FindAction("Look");
         JumpAction = InputSystem.actions.FindAction("Jump");
         SprintAction = InputSystem.actions.FindAction("Sprint");
         CrouchAction = InputSystem.actions.FindAction("Crouch");
         LeftClickAction = InputSystem.actions.FindAction("LeftClick");
         RightClickAction = InputSystem.actions.FindAction("RightClick");
         InteractAction = InputSystem.actions.FindAction("Interact");
+        InventoryAction = InputSystem.actions.FindAction("Inventory");
+        
+        Debug.Log("InventoryAction is: " + (InventoryAction != null ? "found" : "NULL"));
         
         MoveAction.performed += ctx => onMove?.Invoke(ctx.ReadValue<Vector2>());
         MoveAction.canceled += ctx => onMove?.Invoke(Vector2.zero);
@@ -55,7 +63,10 @@ public class PlayerControlsSO : ScriptableObject
         RightClickAction.canceled += ctx => Onrightclick?.Invoke();
 
         InteractAction.performed += ctx => Oninteract?.Invoke();
-        InteractAction.canceled += ctx => Oninteract?.Invoke();
+        InventoryAction.performed += ctx => { Debug.Log("Inventory button performed!"); Oninventory?.Invoke(); };
+        
+        InventoryAction.performed += ctx => Oninventory?.Invoke();
+        InventoryAction.canceled += ctx => Oninventory?.Invoke();
 
     }
 }
