@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd1457481d926e447994f923ff151331, type: 3}
-  m_Name: TestItem
+  m_Name: TestItem2
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: testItem
-  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
   maxStackSize: 10
-  itemPrefab: {fileID: 0}
-  handItemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 8518371544324628247, guid: a5f2684b3a7ef824b81e133acf8742e4, type: 3}
+  handItemPrefab: {fileID: 6284356650979964646, guid: 18b73cef475073c4b9a4533c62c5580c, type: 3}

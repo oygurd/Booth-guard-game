@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd1457481d926e447994f923ff151331, type: 3}
+  m_Name: TestItem1
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  itemName: testItem
+  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  maxStackSize: 10
+  itemPrefab: {fileID: 7071707934119644495, guid: cd8f6c716e912cf4f9703281e3e5f6a3, type: 3}
+  handItemPrefab: {fileID: 275471204655625303, guid: 89fe07b65eb941041b3a6d7bf8800407, type: 3}

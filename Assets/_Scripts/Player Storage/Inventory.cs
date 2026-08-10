@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
@@ -13,6 +14,18 @@ public class Inventory : MonoBehaviour
     public GameObject inventorySlotParent;
 
     public Image dragIcon;
+
+    public float pickupRange;
+    private item lookAtItem;
+    public Material highlightMaterial;
+    private Material originalMaterial;
+    private Renderer lookedAtRenderer = null;
+
+    private int equippedHotbarIndex = 0;
+    public float equippedOpacity = 0.9f;
+    public float normalOpacity = 0.5f;
+    public Transform hand;
+    private GameObject currentHeldItem;
 
     private List<Slot> inventorySlots = new List<Slot>();
     private List<Slot> hotbarSlots = new List<Slot>();
@@ -28,17 +41,26 @@ public class Inventory : MonoBehaviour
 
         allslots.AddRange(inventorySlots);
         allslots.AddRange(hotbarSlots);
-        
+
         PlayerControlsSo.Initialize();
         PlayerControlsSo.Oninventory += OpenInventory;
+        PlayerControlsSo.Oninteract += Pickup;
+        PlayerControlsSo.onEscape += UseEscapeToCloseInventory;
     }
 
-   
+
     private void Update()
     {
-       StartDrag();
-       UpdateDragItemPosition();
-       EndDrag();
+        DetectedLookedAtItem();
+        Pickup();
+
+        StartDrag();
+        UpdateDragItemPosition();
+        EndDrag();
+        
+        HandleHotbarSelection();
+        HandleDropEquippedItem();
+        UpdateHotbarOpacity();
     }
 
     public void OpenInventory()
@@ -46,6 +68,17 @@ public class Inventory : MonoBehaviour
         Debug.Log("OpenInventory called");
         uiIsOpen = !uiIsOpen;
         uiHolder.SetActive(uiIsOpen);
+        Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = uiIsOpen;
+        FpsCamController.instance.updatingRotation = !uiIsOpen;
+    }
+
+    public void UseEscapeToCloseInventory()
+    {
+        if (uiIsOpen)
+        {
+            OpenInventory();
+        }
     }
 
     public void AddItem(ItemSO itemToAdd, int amount)
@@ -97,29 +130,35 @@ public class Inventory : MonoBehaviour
 
     private void StartDrag()
     {
-        Slot hovered = GetHoveredSlot();
-        if (hovered != null && hovered.HasItem())
+        if (PlayerControlsSo.LeftClickAction.IsPressed())
         {
-            draggedSlot = hovered;
-            isDragging = true;
+            Slot hovered = GetHoveredSlot();
+            if (hovered != null && hovered.HasItem())
+            {
+                draggedSlot = hovered;
+                isDragging = true;
 
-            //show drag item
-            dragIcon.sprite = hovered.GetItem().icon;
-            dragIcon.color = new Color(1, 1, 1, 0.5f);
-            dragIcon.enabled = true;
+                //show drag item
+                dragIcon.sprite = hovered.GetItem().icon;
+                dragIcon.color = new Color(1, 1, 1, 0.5f);
+                dragIcon.enabled = true;
+            }
         }
     }
 
     private void EndDrag()
     {
-        Slot hovered = GetHoveredSlot();
-        if (hovered != null)
+        if (isDragging && PlayerControlsSo.LeftClickAction.WasReleasedThisFrame())
         {
-            HandleDrop(draggedSlot, hovered);
+            Slot hovered = GetHoveredSlot();
+            if (hovered != null)
+            {
+                HandleDrop(draggedSlot, hovered);
 
-            dragIcon.enabled = false;
-            draggedSlot = null;
-            isDragging = false;
+                dragIcon.enabled = false;
+                draggedSlot = null;
+                isDragging = false;
+            }
         }
     }
 
@@ -160,8 +199,8 @@ public class Inventory : MonoBehaviour
 
                 return;
             }
-            
         }
+
         //different item
         if (to.HasItem())
         {
@@ -172,6 +211,7 @@ public class Inventory : MonoBehaviour
             from.SetItem(tempItem, tempAmount);
             return;
         }
+
         //empty slot
         to.SetItem(from.GetItem(), from.GetAmount());
         from.ClearSlot();
@@ -183,5 +223,111 @@ public class Inventory : MonoBehaviour
         {
             dragIcon.transform.position = Input.mousePosition;
         }
+    }
+
+    private void Pickup()
+    {
+        if (lookedAtRenderer != null &&
+            PlayerControlsSo.InteractAction.WasPressedThisFrame()) 
+        {
+            item item = lookedAtRenderer.GetComponent<item>();
+            if (item != null)
+            {
+                AddItem(item.Item, item.amount);
+                Destroy(item.gameObject);
+                EquipHeldItem();
+            }
+        }
+    }
+
+    private void DetectedLookedAtItem()
+    {
+        if (lookedAtRenderer != null)
+        {
+            lookedAtRenderer.material = originalMaterial;
+            lookedAtRenderer = null;
+            originalMaterial = null;
+        }
+
+        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, pickupRange))
+        {
+            item item = hit.collider.GetComponent<item>();
+            if (item != null)
+            {
+                Renderer rend = item.GetComponent<Renderer>();
+                if (rend != null)
+                {
+                    originalMaterial = rend.material;
+                    rend.material = highlightMaterial;
+                    lookedAtRenderer = rend;
+                }
+            }
+        }
+    }
+
+    private void UpdateHotbarOpacity()
+    {
+        for (int i = 0; i < hotbarSlots.Count; i++)
+        {
+            Image icon = hotbarSlots[i].GetComponent<Image>();
+
+            if (icon != null)
+            {
+                icon.color = (i == equippedHotbarIndex) ? new Color(1,1,1,equippedOpacity) : new Color(1, 1, 1, normalOpacity);
+            }
+        }
+    }
+
+    private void HandleHotbarSelection()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (Input.GetKeyDown((i + 1).ToString()))
+            {
+                equippedHotbarIndex = i;
+                UpdateHotbarOpacity();
+                EquipHeldItem();
+            }
+        }
+    }
+
+    private void HandleDropEquippedItem()
+    {
+        if (!Input.GetKeyDown(KeyCode.Q)) return;
+
+        Slot equippedSlot = hotbarSlots[equippedHotbarIndex];
+        
+        if (!equippedSlot.HasItem()) return;
+
+        ItemSO itemSO = equippedSlot.GetItem();
+        GameObject prefab = itemSO.itemPrefab;
+        
+        if (prefab == null) return;
+        
+        GameObject dropped = Instantiate(prefab, Camera.main.transform.position + Camera.main.transform.forward, Quaternion.identity);
+
+        item item = dropped.GetComponent<item>();
+        item.Item =  itemSO;
+        item.amount = equippedSlot.GetAmount();
+        
+        equippedSlot.ClearSlot();
+        
+        EquipHeldItem();
+    }
+
+    private void EquipHeldItem()
+    {
+        if (currentHeldItem != null) Destroy(currentHeldItem);
+        
+        Slot equippedSlot = hotbarSlots[equippedHotbarIndex];
+        if (!equippedSlot.HasItem()) return;
+        ItemSO item = equippedSlot.GetItem();
+        if (item.handItemPrefab == null) return;
+        
+        currentHeldItem = Instantiate(item.handItemPrefab, hand);
+        currentHeldItem.transform.localPosition = Vector3.zero;
+        currentHeldItem.transform.localRotation = Quaternion.identity;
     }
 }
