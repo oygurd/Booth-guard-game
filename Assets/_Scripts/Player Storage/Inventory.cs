@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
@@ -26,6 +27,12 @@ public class Inventory : MonoBehaviour
     public float normalOpacity = 0.5f;
     public Transform hand;
     private GameObject currentHeldItem;
+
+    public GameObject itemDescriptionParent;
+    public Image itemDescriptionImage;
+    public TextMeshProUGUI descriptionItemNameText;
+    public TextMeshProUGUI itemDescriptionText;
+    
 
     private List<Slot> inventorySlots = new List<Slot>();
     private List<Slot> hotbarSlots = new List<Slot>();
@@ -61,6 +68,8 @@ public class Inventory : MonoBehaviour
         HandleHotbarSelection();
         HandleDropEquippedItem();
         UpdateHotbarOpacity();
+        
+        UpdateItemDescription();
     }
 
     public void OpenInventory()
@@ -329,5 +338,25 @@ public class Inventory : MonoBehaviour
         currentHeldItem = Instantiate(item.handItemPrefab, hand);
         currentHeldItem.transform.localPosition = Vector3.zero;
         currentHeldItem.transform.localRotation = Quaternion.identity;
+    }
+
+    private void UpdateItemDescription()
+    {
+        Slot hoveredSlot = GetHoveredSlot();
+
+        if (hoveredSlot != null)
+        {
+            ItemSO hoveredItem = hoveredSlot.GetItem();
+
+            if (hoveredItem != null)
+            {
+                itemDescriptionParent.SetActive(true);
+                itemDescriptionImage.sprite = hoveredItem.icon;
+                itemDescriptionText.text = hoveredItem.Description;
+                descriptionItemNameText.text = hoveredItem.name;
+                return;
+            }
+        }
+        itemDescriptionParent.SetActive(false);
     }
 }
