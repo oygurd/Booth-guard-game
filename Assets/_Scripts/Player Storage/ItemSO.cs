@@ -8,6 +8,9 @@ public class ItemSO : ScriptableObject
     public int maxStackSize;
     public GameObject itemPrefab;
     public GameObject handItemPrefab;
+
+    public float price;
+    public int amountInShop;
     
     public string Description;
 }

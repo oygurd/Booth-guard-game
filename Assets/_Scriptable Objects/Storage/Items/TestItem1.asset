@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd1457481d926e447994f923ff151331, type: 3}
   m_Name: TestItem1
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: testItem
+  itemName: testItem 1
   icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   maxStackSize: 10
   itemPrefab: {fileID: 7071707934119644495, guid: cd8f6c716e912cf4f9703281e3e5f6a3, type: 3}
   handItemPrefab: {fileID: 275471204655625303, guid: 89fe07b65eb941041b3a6d7bf8800407, type: 3}
+  price: 0
+  amountInShop: 0
   Description: this is item 1
