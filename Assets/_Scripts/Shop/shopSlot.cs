@@ -7,10 +7,10 @@ public class shopSlot : MonoBehaviour
 {
     public bool hovering;
    
-    private ItemSO displayedItem;
+    public ItemSO displayedItem;
     private int itemAmount;
 
-    private Image iconImage;
+    public Image iconImage;
     private TextMeshProUGUI amountText;
 
     private void Awake()

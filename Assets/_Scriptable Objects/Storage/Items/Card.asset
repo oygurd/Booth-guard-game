@@ -18,5 +18,5 @@ MonoBehaviour:
   itemPrefab: {fileID: 0}
   handItemPrefab: {fileID: 0}
   price: 0
-  amountInShop: 0
+  amountInShop: 1
   Description: 

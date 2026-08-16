@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using TMPro;
+using UnityEditor;
 using UnityEngine.UI;
+
 public class shopInventory : MonoBehaviour
 {
+    public bool getItems;
+    
     public int maxItemsInShopInventory;
 
     public GameObject uiHolder;
@@ -15,35 +19,37 @@ public class shopInventory : MonoBehaviour
 
     public List<ItemSO> itemsPool = new List<ItemSO>();
     public List<ItemSO> RandomItems = new List<ItemSO>();
-    public List<Slot> allSlots = new List<Slot>();
+
+    public List<shopSlot> allSlots = new List<shopSlot>();
 
     private Image iconImage;
     private TextMeshProUGUI amountText;
-    
+
     private ItemSO displayedItem;
     private int itemAmount;
 
     private void Awake()
     {
-        iconImage = transform.GetChild(0).GetComponent<Image>();
-        amountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>(); 
-        
-        allSlots.AddRange(shopInventoryParent.GetComponentsInChildren<Slot>());
-        
-        GetRandomItems();
-    }
-  
+        allSlots.AddRange(shopInventoryParent.GetComponentsInChildren<shopSlot>());
 
+        
+    }
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+      
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (!getItems)
+        {
+            getItems = true;
+            GetRandomItems();
+            getItems = true;
+        }
     }
 
     public void OpenUI()
@@ -60,6 +66,14 @@ public class shopInventory : MonoBehaviour
             RandomItems.Add(item);
             AddItem(item, item.amountInShop);
             Debug.Log("The item " + item.itemName + " has been added to the shop");
+
+            /*allSlots[i].displayedItem = item;
+            allSlots[i].displayedItem.icon = item.icon;
+            allSlots[i].displayedItem.amountInShop =  item.amountInShop;*/
+            allSlots[i].SetItem(item, item.amountInShop);
+
+            if (i == maxItemsInShopInventory - 1)
+                break;
         }
     }
 
@@ -67,7 +81,7 @@ public class shopInventory : MonoBehaviour
     {
         int remaining = amount;
 
-        foreach (Slot slot in allSlots)
+        foreach (shopSlot slot in allSlots)
         {
             if (slot.HasItem() && slot.GetItem() == itemToAdd)
             {
@@ -90,7 +104,7 @@ public class shopInventory : MonoBehaviour
             }
         }
 
-        foreach (Slot slot in allSlots)
+        /*foreach (shopSlot slot in allSlots)
         {
             if (!slot.HasItem())
             {
@@ -107,14 +121,14 @@ public class shopInventory : MonoBehaviour
             {
                 Debug.Log("Inventory Is Full, Could Not Add" + remaining + "of" + itemToAdd.itemName);
             }
-        }
+        }*/
     }
 
     public void SetItem(ItemSO item, int amount)
     {
         displayedItem = item;
         itemAmount = amount;
-      
+
         UpdateSlot();
     }
 
@@ -123,9 +137,9 @@ public class shopInventory : MonoBehaviour
         if (iconImage == null)
         {
             iconImage = transform.GetChild(0).GetComponent<Image>();
-            amountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>(); 
+            amountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         }
-         
+
         if (displayedItem != null)
         {
             iconImage.enabled = true;
@@ -138,8 +152,8 @@ public class shopInventory : MonoBehaviour
             amountText.text = "";
         }
     }
+
     public void Payment(float price)
     {
-        
     }
 }

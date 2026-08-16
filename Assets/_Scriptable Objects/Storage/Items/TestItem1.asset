@@ -18,5 +18,5 @@ MonoBehaviour:
   itemPrefab: {fileID: 7071707934119644495, guid: cd8f6c716e912cf4f9703281e3e5f6a3, type: 3}
   handItemPrefab: {fileID: 275471204655625303, guid: 89fe07b65eb941041b3a6d7bf8800407, type: 3}
   price: 0
-  amountInShop: 0
+  amountInShop: 3
   Description: this is item 1
