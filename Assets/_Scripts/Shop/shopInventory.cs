@@ -6,7 +6,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine.UI;
 
-public class shopInventory : MonoBehaviour
+public class shopInventory : MonoBehaviour, IInteracctable
 {
     public bool getItems;
     
@@ -27,7 +27,10 @@ public class shopInventory : MonoBehaviour
 
     private ItemSO displayedItem;
     private int itemAmount;
-
+    
+    public Collider[] playerInRange;
+    public LayerMask playerlayerMask;
+    private RaycastHit hit;
     private void Awake()
     {
         allSlots.AddRange(shopInventoryParent.GetComponentsInChildren<shopSlot>());
@@ -35,11 +38,17 @@ public class shopInventory : MonoBehaviour
         
     }
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Interactable()
     {
-      
+        OpenUI();
     }
+
+    public string getInteractPrompt()
+    {
+        return "Interact";
+
+    }
+    
 
     // Update is called once per frame
     void Update()
@@ -50,12 +59,21 @@ public class shopInventory : MonoBehaviour
             GetRandomItems();
             getItems = true;
         }
+        
+        playerInRange = Physics.OverlapSphere(transform.position, 5, playerlayerMask);
+
+        if (playerInRange.Length == 0)
+        {
+            uiIsOpen = false;
+            uiHolder.SetActive(false);
+        }
     }
 
     public void OpenUI()
     {
         uiIsOpen = !uiIsOpen;
         uiHolder.SetActive(uiIsOpen);
+        
     }
 
     public void GetRandomItems()
