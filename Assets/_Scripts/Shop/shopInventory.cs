@@ -84,10 +84,7 @@ public class shopInventory : MonoBehaviour, IInteracctable
             RandomItems.Add(item);
             AddItem(item, item.amountInShop);
             Debug.Log("The item " + item.itemName + " has been added to the shop");
-
-            /*allSlots[i].displayedItem = item;
-            allSlots[i].displayedItem.icon = item.icon;
-            allSlots[i].displayedItem.amountInShop =  item.amountInShop;*/
+            
             allSlots[i].SetItem(item, item.amountInShop);
 
             if (i == maxItemsInShopInventory - 1)
