@@ -13,7 +13,7 @@ public class visitorsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       // Instantiate(possibleVisitors[1], transform.position, Quaternion.identity);;
+      GameObject newVisitor = Instantiate(possibleVisitors[0].gameObject, transform.position, Quaternion.identity);;
     }
 
     // Update is called once per frame
